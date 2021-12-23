@@ -27,6 +27,8 @@ class Reader:
                 for street_name in road[1:]:
                     street_id = problem.name_to_id[street_name]
                     problem.Cars[id].add_to_road(street_id, problem.Streets[street_id].end)
+                    problem.Cars[id].LB += problem.Streets[street_id].length
+            
                 id+=1
         problem.add_Lights()
         return problem

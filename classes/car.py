@@ -1,16 +1,17 @@
 class Car:
     def __init__(self, id, length):
         self.id = id
-        self.current_location = -1  # will return road
-        self.seq_road = 0
         self.length = length
         self.road = []
         self.intersections = []  #wsm niepotrzebne idk
-        self.current_len = 0
+        
         ### for the simulation
+        self.current_location = -1  # will return road
+        self.seq_road = 0
         self.last_intersection = -1
         self.in_transit = False
         self.number = None
+        self.LB = 0
 
     def add_to_road(self, street_id, end_intersection_id):
         self.road.append(street_id)
@@ -22,6 +23,7 @@ class Car:
 
     def update_transit(self, time, current_len):
         self.in_transit = (time - self.last_intersection) < (current_len)
+        self.waiting = (time - self.last_intersection) - (current_len)
         if self.last_intersection == -1:
             self.in_transit = False
 
@@ -36,3 +38,11 @@ class Car:
 
     def ostatnia_prosta(self, id_street):
         return self.road[-1] == id_street
+
+    def reset(self):
+        self.current_location = -1  # will return road
+        #self.current_len = 0
+        self.seq_road = 0
+        self.last_intersection = -1
+        self.in_transit = False
+        self.number = None

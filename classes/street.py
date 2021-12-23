@@ -24,6 +24,7 @@ class Street:
     def is_empty(self):
         return self.passed == self.entered
 
-    def get_first(self, time):
-        bool_waits = time >= self.queue[0][1] + self.length
-        return self.queue[0], bool_waits
+
+    def reset(self):
+        self.passed = 0
+        self.entered = 0
