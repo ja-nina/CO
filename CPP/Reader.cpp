@@ -24,13 +24,15 @@ class Reader{
             int t,c,l,s,p;
             t = stoi(words[0]); l = stoi(words[1]); s = stoi(words[2]); c = stoi(words[3]); p = stoi(words[4]);
             MyProblem = new Problem(t, l, s, c, p);
-
+            
             int lightId = 0;
             while(lightId < MyProblem->lights){
                 MyProblem->Lights.push_back( new Light(lightId, MyProblem->T));
+                MyProblem->Lights[lightId]->setUsed();
                 lightId +=1;
             }
 
+            
             int strId = 0;
             while(strId < MyProblem->streets){
                 std::getline(myfile,line);
@@ -40,9 +42,6 @@ class Reader{
                 MyProblem->Streets.push_back(new Street(strId, stoi(words[0]), stoi(words[1]), stoi(words[3])));
                 MyProblem->NameToId[words[2]] = strId;
                 MyProblem->IdToName[strId] = words[2];
-                //MyProblem->Lights[stoi(words[1])]->addToSchedule(strId, 0);
-                //*JUST FOR TESTS*
-                MyProblem->Lights[stoi(words[1])]->addToSchedule(strId, 1);
                 strId += 1;
             }
             int carId = 0;
@@ -58,12 +57,6 @@ class Reader{
                 }
                 carId += 1;
             }
-            // for(Car* car : MyProblem->Cars){
-            //     std::cout<<"car id: "<< car->id<<std::endl;
-            //     for( int streetId: car->road){
-            //         std::cout<<"   "<< MyProblem->IdToName[streetId]<<std::endl;
-            //     }
-            // }
         }
 
         return MyProblem;

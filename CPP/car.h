@@ -17,6 +17,7 @@ class Car{
     bool isInTransit(int, int);
     int  cross(int); //returns new road
     bool ostatniaProsta();
+    void reset();
 
 
 };

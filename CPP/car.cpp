@@ -22,3 +22,7 @@ int Car::cross(int time){
     this->lastCross = time;
     return this->road[this->seq];
 }
+
+void Car::reset(){
+    this->lastCross = -1;
+}
