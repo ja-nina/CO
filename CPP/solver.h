@@ -12,7 +12,7 @@ class Solver{
 
 
     Problem* problem;
-    std::set<std::pair<double, Solution*>> pool;
+    std::vector<std::pair<double, Solution*>> pool;
     std::unordered_set<int> TabuSet; // żeby sb dupy nie zawracać sprawdzaniem znowu tego samego - long bo bd tylko hash sprawdzać
     float avgCloggynessStreet;
     float avgCloggynessLight; // the more the intersection is above average the highers the probability of mutation
@@ -26,7 +26,7 @@ class Solver{
     Solver(){}
     void fillPool();
     
-    Solution* cross(Solution* solution1, Solution* solution2);
+    std::vector<Solution*> crossover(Solution* parent1, Solution* parent2);
     //instead of making a constructor
     // SET THE PROBLEM 
     //+ STREETS + LIGHTS ETC
