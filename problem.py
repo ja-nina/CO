@@ -182,7 +182,6 @@ class Problem:
                 self.Lights[self.Streets[street].end].schedule[street] += 1
                 self.Lights[self.Streets[street].end].cycle +=1
 
-
     def get_best_fit(self, thereshold = THERESHOLD):
         #based on the times of arrival at an intersection 
         #we see how the density function looks, then on the basis of the density functions we choose then to activate what green light
@@ -244,7 +243,6 @@ class Problem:
 
             #print("SCHEDULE FOR LIGHT ", light.id, light.starting, light.schedule)
             #not only arrival time is weighed but also each war waiting
-            
 
     def sum_over(self, length, plot, cycle):
         #print("basically the plot: ", np.remainder(np.array(plot), cycle))

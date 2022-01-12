@@ -18,6 +18,7 @@ class Car{
     int  cross(int); //returns new road
     bool ostatniaProsta();
     void reset();
+    float priority = 0;
 
 
 };

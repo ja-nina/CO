@@ -5,6 +5,7 @@ Street:: Street( int id, int start, int end, int length){
     this->start = start;
     this->end = end;
     this->length = length;
+    //this->usage = 
 }
 
 int Street::carEnter(){
@@ -24,4 +25,6 @@ bool Street::is_empty(){
 void Street::reset(){
     this->entered = 0;
     this->passed = 0;
+    waitingTime = 0;
+    history.clear();
 }

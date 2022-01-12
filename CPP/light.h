@@ -7,7 +7,7 @@
 class Light{
     public:
     Light(int, int); //id, time
-    ~Light(){};
+    ~Light();
     //std::unordered_map<int,int> order;
     std::unordered_map<int, int> starting;
     std::unordered_map<int,int> schedule;

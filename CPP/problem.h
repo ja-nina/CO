@@ -33,5 +33,8 @@ class Problem {
     bool isFirst();
     void _situateCars();
     int carCrosses(int, int, int, int);
+    float meanstreetSituation = 0;
+    static float getSigmoidPriority(float ratioToMean);
+    void dropThosePeskyCars(float thereshold);
     
 };

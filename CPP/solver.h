@@ -25,17 +25,18 @@ class Solver{
 
     Solver(){}
     void fillPool();
-    Solution* mutate(Solution* solution, int seed, bool ifDelete, bool ifChangeLen);
+    
     Solution* cross(Solution* solution1, Solution* solution2);
     //instead of making a constructor
     // SET THE PROBLEM 
     //+ STREETS + LIGHTS ETC
     public:
+        Solution* mutate(Solution* solution, int seed, bool ifChangeOrder, bool ifDelete, bool ifChangeLen);
         int streets;
         int lights;
         void createPool(Solution* BaseSolution);
         void setProblem(Problem* problem);
-        Solution& getBestFit();
+        void getBestFit(Solution* solution);
         //to make it oop we could have setters but cmon
         float MeanCloggStr;
         float MeanCloggLight;
@@ -51,6 +52,7 @@ class Solver{
             return instance;
         }
         void go();
+        Solution* dropThosePeskyCars(Solution* solution, float thereshold);
     // preprocess - is done inside the provlem
 
     //epochs of 

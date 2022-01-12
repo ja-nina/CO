@@ -12,6 +12,11 @@ void Light::setUsed(){
     for (int i=0;i<T;i++) this->used.push_back('0'); //chodzi o to, że vector<bool> jest zjebany a int zajmuje więcej miejsca niz bool
 }
 
+
+Light::~Light(){
+    used.clear();
+
+}
 void Light::addStreet(int idStreet){
     this->schedule[idStreet] = 1;
     this->starting[idStreet] =this->cycle;
@@ -19,7 +24,11 @@ void Light::addStreet(int idStreet){
 }
 
 bool Light::isGreen(int idStreet, int time){
-     if(this->starting.count(idStreet)){
+    //std::cout<<"isgreen? light:" <<id<<" str: "<<idStreet<<std::endl;
+    //for(auto& item: starting){
+    //    std::cout<<"  "<< item.first<<" - "<< item.second<<std::endl;
+    //}
+     if(this->starting.count(idStreet) == 1 && this->schedule.count(idStreet) == 1){
          if(this->starting[idStreet] == -1){
              return false;
          }
@@ -40,12 +49,14 @@ void Light::addToSchedule(int idStreet, int length){
     this->schedule[idStreet] = length;
     if(length == 0){ 
         this->starting[idStreet] = -1; 
-        return ;
+        return;
     }
+    //std::cout<<"lol1"<<std::endl;
     this->starting[idStreet] = this->cycle;
     this->usedStreets.push_back(idStreet);
     this->numberOfUsedStreets += 1;
     this->cycle += length;
+    //std::cout<<"lol2"<<std::endl;
 }
 
 void Light::reset(){

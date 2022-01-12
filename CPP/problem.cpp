@@ -25,9 +25,9 @@
 
     void Problem::_situateCars(){
         for( Car* car: this->Cars){
-            //int first_str = car->road[0];
             car->number = this->Streets[car->road[0]]->carEnter();
             car->seq = 0;
+            Streets[car->road[0]]->history[0] = 1;
         }
     }
     
@@ -38,6 +38,9 @@
         if (! this->Cars[carId]->ostatniaProsta()){
             this->Cars[carId]->number = this->Streets[nextStreet]->carEnter();
         }
+        
+        Streets[nextStreet]->history.insert({second + Streets[nextStreet]->length, 1});
+
         return nextStreet;
     }
     //log 
@@ -48,22 +51,18 @@
         bool isGreen;
         bool isFirst;
         bool isTransit;
-        // ended might be implemented as a vector 
         bool ended[this->cars] = {false};
-        //par where 
         for(int second= 0; second < this->T; second++){
             //std::cout<<"SIMULATION MIDDLE" <<std::endl;
             for( Car* car: this->Cars){
                 if(ended[car->id]){
                     continue;
-
-                }
-                //implement privilege 
-                //implement weights
-                
+                }           
                 currentStreet = car->road[car->seq];
                 nextLight = this->Streets[currentStreet]->end;
+                //std::cout<<"beforeIsgreen"<<std::endl;
                 isGreen = this->Lights[nextLight]->isGreen(currentStreet, second);
+                //std::cout<<"afterIsgreen"<<std::endl;
                 if(car->ostatniaProsta()){
                     int bonus = this->T - this->Streets[currentStreet]->length - car->lastCross;
                     if(bonus >= 0){
@@ -72,9 +71,11 @@
                     ended[car->id] = true;
                     continue;
                 }
-                
-                
                 if(this->Lights[nextLight]->canCross(second) == false){
+                    if(!car->isInTransit(second, this->Streets[currentStreet]->length)){
+                    this->Streets[currentStreet]->waitingTime += car->priority; 
+
+                    }
                     continue;
                 }
                 isFirst = car->number == this->Streets[currentStreet]->passed;
@@ -82,9 +83,16 @@
                 //std::cout<<second<< " "<< car->id<<" "<<isGreen << " "<<isFirst << " " << !isTransit<<std::endl;
                 if(isGreen && isFirst && ! isTransit){
                        this->carCrosses(car->id, currentStreet, nextLight, second);
-
+                }
+                else{
+                    this->Streets[currentStreet]->waitingTime += car->priority;
+                    //std::cout<<"updatedWaiting time! "<<this->Streets[currentStreet]->waitingTime<<std::endl;
                 }
             }
+        }
+        //part for updating waiting time 
+        for(Street* street: Streets){
+            Solver::getInstance().ProblematicStreets[street->waitingTime] = street->id;       
         }
         return profit;
 
@@ -94,21 +102,38 @@
         //first calculating LB
         int tempNumberOfUsedStreets[this->lights] = {0};
         float temporary;
+        int meanLB = 0;
+        int tempdenom = 0;
 
         for(Car* car: this->Cars){
             for(int street: car->road){
+                if(street == car->road[0]){continue;}
                 car->LB += this->Streets[street]->length;
                 *(cloggyness + street) = *(cloggyness + street) + 1;
             
             }
             if(car->LB <= this->T){
+                int num = 0;
+                tempdenom +=1;
+                meanLB += car->LB;
                 for(int street: car->road){
+                    num+=1;
+                    Streets[street]->situation += (float) num * car->LB / (float) car->length;
+                    Streets[street]->useness += 1;
                     Solver::getInstance().usedStreets.insert(street);
                     tempNumberOfUsedStreets[this->Streets[street]->end] +=1;
-                    
             }
+                this->Cars[car->id]->priority = this->getSigmoidPriority((float) car->LB / (meanLB / tempdenom));
+                //std::cout<<car->priority<<" "<<meanLB<<" "<<tempdenom<<std::endl;
             }
+            
         }
+
+        // this is kinda unnecessary but ok the mutation can be hased on the waiting times but sure
+
+        for(Street* street: Streets){
+                meanstreetSituation += (float) street->situation / (float) street->useness;
+            }
         for (int id = 0; id < this->streets; id++){
             *(this->cloggyness + id) = 0.1*std::max(*(this->cloggyness + id)/this->T, (float)1.0) *std::max(0.1, log( std::max(0,tempNumberOfUsedStreets[this->Streets[id]->end] - 1)));
             *(this->cloggynessLights + this->Streets[id]->end) += *(this->cloggyness + id);
@@ -177,4 +202,13 @@
         }
 
     }
+
+//get best fit 
+
+//change of lengths proportional to useness
+
+float Problem::getSigmoidPriority(float  ratioToMean){
+    return 1/(1 + exp(-4 + ratioToMean*3));
+}
+
 

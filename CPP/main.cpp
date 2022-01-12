@@ -8,27 +8,26 @@ int main(){
     Problem* MyProblem;
     MyProblem = MyReader.read(path);
     Solution* base = MyProblem->preprocessor();
+    
+    try{
+    std::cout<<"create pool"<<std::endl;
     Solver::getInstance().setProblem(MyProblem);
     Solver::getInstance().createPool(base);
+    std::cout<<"go"<<std::endl;
     Solver::getInstance().go();
-    try{
+
     auto start = std::chrono::high_resolution_clock::now();
+    MyProblem->Lights = base->Lights;
     MyProblem->reset();
     int score = MyProblem->simulate();
+    Solver::getInstance().setProblem(MyProblem);
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout<<"Chuj w dupe syniakowi "<<score<<" time: "<< duration.count() <<"(microsec)" <<std::endl;
-    }catch(const std::runtime_error& re){
-        std::cerr << "Runtime error: " << re.what() << std::endl;
-    }
-    //cpp basic wersja wymulacji (bez zliczania i bez get best fit, bez resetu)
-    try{
-    MyProblem->reset();
-    auto start = std::chrono::high_resolution_clock::now();
-    int score = MyProblem->approxsimulate();
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    std::cout<<"Chuj w dupe syniakowi "<<score<<" time: "<< duration.count() <<"(microsec)" <<std::endl;
+    //for(Car* car: MyProblem->Cars){
+    //    std::cout<<"priority of car:"<< car->priority
+    //}
+
     }catch(const std::runtime_error& re){
         std::cerr << "Runtime error: " << re.what() << std::endl;
     }
