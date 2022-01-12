@@ -9,35 +9,15 @@
 void Solver::createPool(Solution* BaseSolution){
     srand(time(NULL));
     int i = 0; int score;
-    int baseScore = problem->simulate();
-    
-    std::cout<<"base score: "<< baseScore<<std::endl;
-    while(i<1){
-        std::cout<<"START"<<std::endl;
+    while(i<30){
         Solution* solution;
-        std::cout<<"RESET"<<std::endl;
-        
-        std::cout<<"MUTATION"<<std::endl;
-        solution = this->mutate(BaseSolution, floor(rand()* 100000),true, false, false);
+        solution = this->mutate(BaseSolution, floor(rand()* 100000), true, false, false);
         problem->Lights = solution->Lights;
-        problem->reset();
         score = problem->simulate();
-        std::cout<<i<<" score :"<< score<<" approxore: "<< problem->approxsimulate()<<" base score: "<< baseScore<<std::endl;
-        if(score > baseScore){
-            i++;
-            pool.insert({score, solution});
-            std::cout<<i<<" another down "<<std::endl;
-        }else{
-            std::cout<<"deleting"<<std::endl;
-            delete solution;
-            
-        }
+        problem->reset();
+        pool.emplace_back(score, solution);
+        i++;
     }
-    
-    for(auto& element: pool){
-        std::cout<<element.first<<" " << (long) element.second->getHash()<<std::endl;
-    }
-    std::cout<<"END OF POOL CREATION"<<std::endl;
 }
 
 //getBest fit
@@ -172,7 +152,21 @@ Solution* Solver::mutate(Solution* solution, int  seed, bool ifChangeOrder, bool
         return newSolution;
     }
 
-//cross
+std::vector<Solution*> Solver::crossover(Solution* parent1, Solution* parent2) {
+    std::vector<Solution*> children;
+    auto child1 = new Solution(parent1->Lights);
+    auto child2 = new Solution(parent2->Lights);
+    for (int i = 0; i < parent1->Lights.size(); i++) {
+        float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+        if (r < 0.5) {
+            child1->Lights[i] = parent2->Lights[i];
+            child2->Lights[i] = parent1->Lights[i];
+        }
+    }
+    children.push_back(child1);
+    children.push_back(child2);
+    return children;
+}
 
 void Solver::setProblem(Problem* problem){
             this->problem = problem;
@@ -183,85 +177,53 @@ void Solver::setProblem(Problem* problem){
 
 void Solver::go(){
     srand(time(0));
-    Solution* solution;
-    std::set<std::pair<double, Solution*>> newPool;
-    int j = 0; int score;
-    bool ifDelete; bool ifChangeLen;
-    int streakFail = 0;
-    bool deletee = true;
-    float theresholdForDroppingCars = 10;
-    std::cout<<"lights: "<<problem->lights<<" streets: "<< problem->streets<< " problematic lights: "<< ProblematicLights.size() <<  " problematic streets: "<< ProblematicStreets.size() << std::endl;
-    while(j <100){
-        for(auto& pair: pool){
-        while(true){
-            ifDelete = (rand()%10== 1 && j > 10) || ( rand()%3 == 1 && streakFail >  10);
-            ifChangeLen = rand()%3 ==2 || ( rand()%2 == 1);
-            //std::cout<<"MUTATE"<<std::endl;
-            //if(streakFail >=0){
-                std::cout<<"DROPPING "<<pool.size()<< " "<<theresholdForDroppingCars<<std::endl;
-                solution = new Solution(pair.second->Lights);
-                //for(Light* light : solution->Lights){
-                //std::cout<<"light: "<< light->id<<" with cycle: "<< light->cycle<<" used str:  "<<light->numberOfUsedStreets<<" "<< light->usedStreets.size()<<std::endl;
-                //for(auto& item: light->schedule){
-                //    std::cout<<"  schedule: "<< item.first<< " "<< item.second<<std::endl;  
-                //}
-                //for(auto& item: light->starting){
-                //    std::cout<<"  starting: "<< item.first<< " "<< item.second<<std::endl;  
-                //}
-                //}
-                solution = dropThosePeskyCars(solution, theresholdForDroppingCars);
-                theresholdForDroppingCars = theresholdForDroppingCars*0.95;
-
-            //}else{
-            //std::cout<<"mutate"<<std::endl;
-            //solution = this->mutate(pair.second, floor(rand()* 100000), rand()%2 == 1, ifDelete, ifChangeLen);
-            //}
-            problem->Lights = solution->Lights;
-            //for(Light* light : problem->Lights){
-            //    std::cout<<"light: "<< light->id<<" with cycle: "<< light->cycle<<" used str:  "<<light->numberOfUsedStreets<<" "<< light->used.size()<<std::endl;
-            //    for(auto& item: light->schedule){
-            //        std::cout<<"  schedule: "<< item.first<< " "<< item.second<<std::endl;  
-            //    }
-            //    for(auto& item: light->starting){
-            //        std::cout<<"  starting: "<< item.first<< " "<< item.second<<std::endl;  
-            //    }
-            //}
-            std::cout<<"RESET"<<std::endl;
+    problem->reset();
+    Solution* parent1;
+    Solution* parent2;
+    std::vector<std::pair<double, Solution*>> newPool;
+    int j = 0; int score1; int score2;
+    bool ifDelete; bool ifChangeLen; bool ifChangeOrder;
+    std::sort(pool.begin(), pool.end(), [](auto &left, auto &right) {
+        return left.first > right.first;
+    });
+    while(j <50){
+        for (int i = 0; i < pool.size(); i+=2) {
+            parent1 = pool[i].second;
+            parent2 = pool[i+1].second;
+            newPool.emplace_back(pool[i].first, parent1);
+            newPool.emplace_back(pool[i+1].first, parent2);
+            ifDelete = rand() % 3 == 1;
+            ifChangeLen = rand() % 3 == 1;
+            ifChangeOrder = rand() % 3 == 1;
+            std::vector<Solution *> children = this->crossover(parent1, parent2);
+            Solution *child1 = children[0];
+            Solution *child2 = children[1];
+            child1 = this->mutate(child1, floor(rand() * 100000), ifChangeOrder, ifDelete, ifChangeLen);
+            child2 = this->mutate(child2, floor(rand() * 100000), ifChangeOrder, ifDelete, ifChangeLen);
+            problem->Lights = child1->Lights;
+            score1 = problem->simulate();
             problem->reset();
-            std::cout<<"SIMULATE"<<std::endl;
-            score = problem->simulate();
-            //getBestFit(solution);
-            //score = problem->simulate();
-            std::cout<<j<<" del: "<<ifDelete<<" lenchange: "<< ifChangeLen<< " score :"<< score <<" approxore: "<< problem->approxsimulate()<<" base score: "<< pair.first<<std::endl;
-    
-            if(score > pair.first){
-                streakFail = 0;
-                newPool.insert({score, solution});
-                //std::cout<<j<<" another down "<<std::endl;
-             break;
-            }else{
-                delete solution;
-                //-delete those new lights
-                streakFail +=1;
-            }
-            
-            }
-        
+            problem->Lights = child2->Lights;
+            score2 = problem->simulate();
+            problem->reset();
+            newPool.emplace_back(score1, child1);
+            newPool.emplace_back(score2, child2);
+        }
+        std::sort(newPool.begin(), newPool.end(), [](auto &left, auto &right) {
+            return left.first > right.first;
+        });
+        std::size_t const half_size = newPool.size() / 2;
+        std::vector<std::pair<double, Solution*>> best(newPool.begin(), newPool.begin() + half_size);
+        std::vector<std::pair<double, Solution*>> worst(newPool.begin() + half_size, newPool.end());
+        for(auto& pair : worst){
+            delete pair.second;
+        }
+        pool.clear();
+        newPool.clear();
+        pool = best;
+        std::cout << std::endl << j << " " << pool[0].first << std::endl << std::endl;
         j++;
-        streakFail == 0;
-        problem->Lights = solution->Lights;
-        //std::cout<<"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"<<std::endl;
-        problem->reset();
-        score = problem->simulate();
-        std::cout<<j<<" del: "<<ifDelete<<" lenchange: "<< ifChangeLen<< " score :"<< score <<" approxore: "<< problem->approxsimulate()<<" base score: "<< pair.first<<std::endl;
     }
-    for(auto& element: pool){
-        std::cout<<j<<" "<<element.first<<" " << (long) element.second->getHash()<<std::endl;
-    }
-    pool.clear();
-    pool = newPool;
-    newPool.clear();
-}
 }
 
 
