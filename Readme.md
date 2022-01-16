@@ -4,7 +4,7 @@ Authors:
  - Janina Żukowska, 148278
  - Mateusz Kądziela, 148271
 
-Subject : Combinatorial optimization, 
+Subject : Combinatorial optimization
 Student group : SI3
 # Algorithms used
 ## Structure of data
@@ -27,17 +27,32 @@ For each car we compute its lower bound for completion time, which is the sum of
 Then we check whether a given street hosts any car which chas a chance to arrive before the deadline(LB <= T), only if this is the case, the streets gets some "green time" at its given intersection. The perks or this approach are twofold:
 firstly - the cycles or intersections are smaller allowing for other streets on that intersection to have more "green time", secondly, cars that wouldn't finish either way get stuck on that street, which prohibits them from potentially clogging other vital streets down the road.
 ### Mutation
-Creates a new solution by changing the previous one.
+
+A solution can be "mutated" in a variety of ways but we focused on 3 main approaches:
+1. Changing the order of streets in the schedule
+2. Changing the streets which appear in the schedule 
+3. Changing the length of "green time" a street gets in its given schedule
+
+##Heuristic 1. 
+In the first approach, we iterate over Problematic Lights*, for each light, we perform a maximum of r swaps( r < 0.3* number of used streets), which means that at most 60% of the order gets modified, but in practice, this number is much lower. Lights are iterated through on the basis of their problematicness, and we iterate over maximum 25% to 75% of the most problematic lights, but this number too is much smaller, since additional randomness is introduced.
+
+##Heuristic 2.
+For the deletion we check a random 1% of the streets in the simulation, if a given street did not host any cars in the schedule, it is removed from the schedule.
+
+##Heuristic 3. 
+For the change of "green time", we iterate over all intersections, if there exists such a street in the schedule, for which the quotient of time cars on this street spend waiting to the "green time" of that street is two times bigger than summed value of this quotient for each street divided by the number of the streets on that schedule, we increase the green time of that street by 1.
+
+###Hashing
+Before a mutated solution is admitted we check if it was already considered by checking the hash of that solutiuon.
+
 ### Crossover
 A simple crossover that iterates over all intersections of both parents and randomly assigns one intersection to one child and the other to the second child.
-# How to run
+## How to run
 We used C++ 14 standard.
-To compile the program, run a command `g++ main.cpp -Wall -Wextra -o myProgram`.
-To run the program with simple solution, run a command`./myProgram.exe 1 [instance]`.
-To run the program with complex solution, run a command`./myProgram.exe 2 [instance]`.
-# Summary
-All in all, the project was pretty hard, and if we were to do it again we probably wouldn't have gone the genetic algorithms route unless we found a superb approximate evaluation. We tried some other approaches, but none of them produced better outcomes.
-# Bibliography
+To compile the program, run a command .
+To run the program with simple solution, run a command`./program.exe 1 [instance]`.
+To run the program with complex solution, run a command`./program.exe 2 [instance]`.
+## Bibliography
 We mostly relied on our knowledge from the previous year of studies and searching for some stuff on the internet. CPP documentation and stackoverflow were both pretty helpful.
 Two, useful pieces of code from stackoverflow were:
 
