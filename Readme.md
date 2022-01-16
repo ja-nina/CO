@@ -1,7 +1,7 @@
 ﻿# Combinatorial Optimization Project 21/22
 ## Basic Information
 Authors:
- - Janina Żukowska, 148278
+ - Nina Żukowska, 148278
  - Mateusz Kądziela, 148271
 
 Subject : Combinatorial optimization
@@ -12,12 +12,13 @@ Everything is stored as an object of a class. There are classes for streets, car
 Evaluation of a solution works by simulating 
 
 ## Simple approach
-For a simple program, we decided to use preprocessing of the data.  It is also used in comples approach, so it will be explained there.
-
+For a simple program, we decided to use preprocessing of the data.  It is also used in comples approach, so it will be explained there. We decided to go with it, because it produced the best results for a simple and quick algorithm.
 
 ## Complex approach
-For a complex program, we decided to use genetic algorithm. It uses preprocessing to generate initial pop and improves on its scores.  
-We create a starting population, by mutating  the solution obtained from preprocessing, until we get 30 different solutions. Then we run a loop that generates new population. It has 2 stopping conditions: no improvement of best score in 50 iterations or reaching the time limit. To ensure that the best solution is in the next population, we move 2 of the best solutions to the new population. Then we perform tournament selection 14 times to get 2 parents. We then use crossover on them, and each child may be mutated with the probability of 0.25. 
+For a complex program, we decided to use genetic algorithm. We thought that searching the solution space would be a great approach to the problem.
+It uses preprocessing to generate initial pop and improves on its scores. 
+### How it works
+We create a starting population, by mutating the solution obtained from preprocessing, until we get 30 different solutions. Then we run a loop that generates new population. It has 2 stopping conditions: no improvement of best score in 50 iterations or reaching the time limit. To ensure that the best solution is in the next population, we move 2 of the best solutions to the new population. Then we perform tournament selection 14 times to get 2 parents. We then use crossover on them, and each child may be mutated with the probability of 0.25. 
 
 Unfortunately, genetic approach is limited if the instance problem is huge. It is due to the fact that simulating such big schedules takes quite some time. We tried to fix it, by creating an approximate evaluation, but none of our approaches to it worked.
 
