@@ -30,14 +30,14 @@ firstly - the cycles or intersections are smaller allowing for other streets on 
 Creates a new solution by changing the previous one.
 ### Crossover
 A simple crossover that iterates over all intersections of both parents and randomly assigns one intersection to one child and the other to the second child.
-## How to run
+# How to run
 We used C++ 14 standard.
 To compile the program, run a command `g++ main.cpp -Wall -Wextra -o myProgram`.
 To run the program with simple solution, run a command`./myProgram.exe 1 [instance]`.
 To run the program with complex solution, run a command`./myProgram.exe 2 [instance]`.
-## Summary
+# Summary
 All in all, the project was pretty hard, and if we were to do it again we probably wouldn't have gone the genetic algorithms route unless we found a superb approximate evaluation. We tried some other approaches, but none of them produced better outcomes.
-## Bibliography
+# Bibliography
 We mostly relied on our knowledge from the previous year of studies and searching for some stuff on the internet. CPP documentation and stackoverflow were both pretty helpful.
 Two, useful pieces of code from stackoverflow were:
 
