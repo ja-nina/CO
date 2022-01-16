@@ -43,8 +43,7 @@ For the deletion we check a random 1% of the streets in the simulation, if a giv
 - Heuristic 3. 
 For the change of "green time", we iterate over all intersections, if there exists such a street in the schedule, for which the quotient of time cars on this street spend waiting to the "green time" of that street is two times bigger than summed value of this quotient for each street divided by the number of the streets on that schedule, we increase the green time of that street by 1.
 
-####Hashing
-Before a mutated solution is admitted we check if it was already considered by checking the hash of that solutiuon.
+Hashing - before a mutated solution is admitted we check if it was already considered by checking the hash of that solutiuon.
 
 ### Crossover
 A simple crossover that iterates over all intersections of both parents and randomly assigns one intersection to one child and the other to the second child.
