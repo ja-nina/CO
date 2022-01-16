@@ -12,7 +12,7 @@ Everything is stored as an object of a class. There are classes for streets, car
 Evaluation of a solution works by simulating 
 
 ## Simple approach
-For a simple program, we decided to use preprocessing of the data.  It is also used in comples approach, so it will be explained there. We decided to go with it, because it produced the best results for a simple and quick algorithm.
+For a simple program, we decided to use preprocessing of the data.  It is also used in complex aproach, so it will be explained there. We decided to go with it, because it produced the best results for a simple and quick algorithm.
 
 ## Complex approach
 For a complex program, we decided to use genetic algorithm. We thought that searching the solution space would be a great approach to the problem.
