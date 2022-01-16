@@ -50,8 +50,9 @@ A simple crossover that iterates over all intersections of both parents and rand
 ## How to run
 We used C++ 14 standard.
 To compile the program, run a command .
-To run the program with simple solution, run a command`./program.exe 1 [instance]`.
-To run the program with complex solution, run a command`./program.exe 2 [instance]`.
+To run the program with simple solution, run a command`./program.exe 1`.
+To run the program with complex solution, run a command`./program.exe 2`.
+Next, you put the problem instance into stdin.
 ## Bibliography
 We mostly relied on our knowledge from the previous year of studies and searching for some stuff on the internet. CPP documentation and stackoverflow were both pretty helpful.
 Two, useful pieces of code from stackoverflow were:
