@@ -26,9 +26,9 @@ Creates a new solution by changing the previous one.
 A simple crossover that iterates over all intersections of both parents and randomly assigns one intersection to one child and the other to the second child.
 ## How to run
 We used C++ 14 standard.
-To compile the program, run a command 
-To run the program with simple solution, run a command`./program.exe 1 [instance]`
-To run the program with complex solution, run a command`./program.exe 2 [instance]`
+To compile the program, run a command .
+To run the program with simple solution, run a command`./program.exe 1 [instance]`.
+To run the program with complex solution, run a command`./program.exe 2 [instance]`.
 ## Bibliography
 We mostly relied on our knowledge from the previous year of studies and searching for some stuff on the internet. CPP documentation and stackoverflow were both pretty helpful.
 Two, useful pieces of code from stackoverflow were:
