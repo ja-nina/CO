@@ -4,7 +4,7 @@ Authors:
  - Janina Żukowska, 148278
  - Mateusz Kądziela, 148271
 
-Subject : Combinatorial optimization
+Subject : Combinatorial optimization, 
 Student group : SI3
 # Algorithms used
 ## Structure of data
