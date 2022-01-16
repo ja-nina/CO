@@ -49,7 +49,7 @@ For the change of "green time", we iterate over all intersections, if there exis
 A simple crossover that iterates over all intersections of both parents and randomly assigns one intersection to one child and the other to the second child.
 ## How to run
 We used C++ 14 standard.
-To compile the program, run a command .
+To compile the program, run a command `g++ main.cpp -Wall -Wextra -o myProgram`.
 To run the program with simple solution, run a command`./program.exe 1`.
 To run the program with complex solution, run a command`./program.exe 2`.
 Next, you put the problem instance into stdin.
