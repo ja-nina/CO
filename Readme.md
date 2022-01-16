@@ -12,7 +12,7 @@ Everything is stored as an object of a class. There are classes for streets, car
 Evaluation of a solution works by simulating 
 
 ## Simple approach
-For a simple program, we decided to use preprocessing of the data.  It works by
+For a simple program, we decided to use preprocessing of the data.  It is also used in comples approach, so it will be explained there.
 
 
 ## Complex approach
